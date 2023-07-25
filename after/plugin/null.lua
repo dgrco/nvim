@@ -7,4 +7,4 @@ null_ls.setup({
 })
 
 -- key binding
-vim.cmd('map <Leader>lf :lua vim.lsp.buf.range_formatting<CR>')
+vim.cmd('map <Leader>lf :lua vim.lsp.buf.format()<CR>')
