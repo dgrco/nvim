@@ -1,8 +1,6 @@
 local lsp = require("lsp-zero").preset("recommended")
 
 lsp.ensure_installed({
-    'tsserver',
-    'rust_analyzer',
 })
 
 -- Fix Undefined global 'vim'
@@ -61,11 +59,13 @@ vim.diagnostic.config({
 
 -- keybinds
 vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "rust" },
+    pattern = { "cc", "cpp" },
     callback = function(args)
-        vim.keymap.set("n", "<F6>", "<CMD>w<CR><CMD>! cargo test<CR>",
+        vim.keymap.set("n", "<F7>", "<CMD>w<CR><CMD>! cmake -DCMAKE_BUILD_TYPE=Debug .<CR>",
             { buffer = args.buf })
-        vim.keymap.set("n", "<F5>", "<CMD>w<CR><CMD>! cargo run<CR>",
+        vim.keymap.set("n", "<F6>", "<CMD>w<CR><CMD>! cmake .<CR>",
+            { buffer = args.buf })
+        vim.keymap.set("n", "<F5>", "<CMD>w<CR><CMD>! make && ./dev<CR>",
             { buffer = args.buf })
     end
 })
