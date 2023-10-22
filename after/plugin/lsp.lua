@@ -63,7 +63,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     callback = function(args)
         vim.keymap.set("n", "<F7>", "<CMD>w<CR><CMD>! cmake -DCMAKE_BUILD_TYPE=Debug .<CR>",
             { buffer = args.buf })
-        vim.keymap.set("n", "<F6>", "<CMD>w<CR><CMD>! cmake .<CR>",
+        vim.keymap.set("n", "<F6>", "<CMD>w<CR><CMD>! cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .<CR>",
             { buffer = args.buf })
         vim.keymap.set("n", "<F5>", "<CMD>w<CR><CMD>! make && ./dev<CR>",
             { buffer = args.buf })
