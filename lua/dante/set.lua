@@ -32,7 +32,7 @@ vim.opt.colorcolumn = "80"
 
 -- keybinds
 vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "cc", "cpp", "h", "hpp" },
+    pattern = { "cc", "cpp", "h", "hpp", "c" },
     callback = function(args)
         vim.opt.tabstop = 2
         vim.opt.softtabstop = 2
