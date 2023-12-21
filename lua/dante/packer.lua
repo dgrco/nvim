@@ -33,6 +33,10 @@ return require('packer').startup(function(use)
         end
     }
 
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
 
 	use {
 		'VonHeikemen/lsp-zero.nvim',
