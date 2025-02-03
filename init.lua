@@ -1,8 +1,35 @@
--- Set <space> as the leader key
--- See `:help mapleader`
+-- Set <space> as the leader key See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.opt.termguicolors = true
+
+-- Spacing
+-- Default settings (2 spaces)
+vim.opt.shiftwidth = 2 -- Indent with 2 spaces
+vim.opt.tabstop = 2 -- Tabs == 2 spaces
+vim.opt.softtabstop = 2 -- Backspace deletes 2 spaces
+vim.opt.expandtab = true -- Use spaces instead of tabs
+
+-- Override for 4-space filetypes
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'python' }, -- Add your filetypes
+  callback = function(args)
+    vim.bo[args.buf].shiftwidth = 4
+    vim.bo[args.buf].tabstop = 4
+    vim.bo[args.buf].softtabstop = 4
+  end,
+})
+
+-- Override for tab-based filetypes
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'cs' }, -- Add your filetypes
+  callback = function(args)
+    vim.bo[args.buf].shiftwidth = 4
+    vim.bo[args.buf].tabstop = 4
+    vim.bo[args.buf].expandtab = false
+  end,
+})
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
@@ -66,10 +93,10 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 
 -- Cursor stuff
-vim.opt.guicursor = 'n:block,v:block,i:block,c:block'
+-- vim.opt.guicursor = 'n:block,v:block,i:block,c:block'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -146,7 +173,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -321,7 +348,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>scw', builtin.grep_string, { desc = '[S]earch [C]urrent [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
@@ -378,7 +405,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      -- { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -568,7 +595,6 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
       {
@@ -644,6 +670,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
     },
     config = function()
       -- See `:help cmp`
@@ -720,6 +747,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'buffer' },
         },
       }
     end,
@@ -730,26 +758,19 @@ require('lazy').setup({
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require('nightfox').setup {}
-
-      vim.cmd 'colorscheme nightfox'
+      -- require('nightfox').setup {}
+      --
+      -- vim.cmd 'colorscheme nightfox'
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rebelot/kanagawa.nvim',
-    lazy = false,
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    'sainnhe/gruvbox-material',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require('kanagawa').setup {
-        commentStyle = { italic = false },
-        keywordStyle = { italic = false },
-      }
-      -- vim.cmd 'colorscheme kanagawa'
+      vim.g.gruvbox_material_background = 'hard'
+      vim.cmd 'colorscheme gruvbox-material'
     end,
   },
 
@@ -839,7 +860,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
